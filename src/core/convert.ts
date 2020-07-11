@@ -149,7 +149,7 @@ function getRestfulPlaceHolders(itf: Interface.IRoot) {
   return restfulPlaceHolders;
 }
 
-function interfaceToJSONSchema(itf: Interface.IRoot, scope: Scope): JSONSchema4 {
+export function interfaceToJSONSchema(itf: Interface.IRoot, scope: Scope): JSONSchema4 {
   let properties = itf.properties.filter(p => p.scope === scope);
 
   properties = [

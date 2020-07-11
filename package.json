@@ -1,18 +1,18 @@
 {
-  "name": "rap",
-  "version": "1.0.2",
+  "name": "@ty-service-tools/service-gen",
+  "version": "0.0.0",
   "description": "rapper, use http api as a function",
   "main": "./dist/index.js",
   "scripts": {
     "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix",
-    "build": "./node_modules/typescript/bin/tsc -p tsconfig.json && node ./script/move-runtime",
+    "build": "rimraf dist && ./node_modules/typescript/bin/tsc -p tsconfig.json && rimraf runtime && node ./script/move-runtime",
     "normal": "npm run build && node ./dist/build/normal",
     "redux": "npm run build && node ./dist/build/redux",
-    "prepublishOnly": "npm run build"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "version": "yarn changelog && git add CHANGELOG.md"
   },
   "bin": {
-    "rap": "./dist/models.js",
-    "rapper": "./dist/models.js"
+    "service-gen": "./dist/models.js"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
     "inquirer": "^7.0.4",
     "json-schema-to-typescript": "^7.1.0",
     "json5": "^2.1.0",
+    "jsonschema": "^1.2.6",
     "latest-version": "^5.1.0",
     "lodash": "^4.17.15",
     "mkdirp": "^0.5.1",
@@ -55,6 +56,7 @@
     "@types/update-notifier": "^2.5.0",
     "@typescript-eslint/eslint-plugin": "^2.5.0",
     "@typescript-eslint/parser": "^2.5.0",
+    "conventional-changelog-cli": "^2.0.34",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
@@ -63,6 +65,7 @@
     "react-dom": "^16.12.0",
     "react-redux": "^7.1.1",
     "redux": "^4.0.4",
+    "rimraf": "^3.0.2",
     "typescript": "^3.8.2"
   },
   "types": "./dist/index.d.ts"

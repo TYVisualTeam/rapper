@@ -1,3 +1,8 @@
+import { JSONSchema4 } from 'json-schema';
+import { Validator } from 'jsonschema';
+
+export { JSONSchema4, Validator };
+
 type IJSON = string | number | boolean | null | { [property: string]: IJSON } | IJSON[];
 
 /** 请求的额外参数类型 */
@@ -35,6 +40,10 @@ interface IDefaultFetchParams {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH' | 'HEAD';
   params?: any;
+  schemas?: {
+    request: JSONSchema4;
+    response: JSONSchema4;
+  };
   extra?: IExtra;
   fetchOption: Omit<RequestInit, 'body' | 'method'>;
 }
@@ -43,6 +52,10 @@ export interface IUserFetchParams {
   url: string;
   method: IDefaultFetchParams['method'];
   params?: object;
+  schemas?: {
+    request: JSONSchema4;
+    response: JSONSchema4;
+  };
   extra?: IExtra;
 }
 
@@ -140,8 +153,13 @@ export const defaultFetch = async ({
   method,
   params,
   extra,
+  schemas,
   fetchOption,
 }: IDefaultFetchParams) => {
+  const validator = new Validator();
+
+  validator.validate(params, schemas.request, { throwError: true });
+
   extra = extra || {};
   let urlWithParams = url;
   const init: RequestInit = { ...fetchOption, method };
@@ -187,6 +205,10 @@ export const defaultFetch = async ({
   }
 
   const res = await fetch(urlWithParams, init);
+
+  const result = res.json();
+  validator.validate(result, schemas.response, { throwError: true });
+
   return Promise.resolve(res.json());
 };
 

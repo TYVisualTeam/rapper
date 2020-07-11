@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import convert from './convert';
+import convert, { interfaceToJSONSchema } from './convert';
 import { Intf, IGeneratedCode, ICreatorExtr } from '../types';
 import { creatInterfaceHelpStr } from './tools';
 import { getPackageName } from '../utils';
@@ -46,6 +46,16 @@ export function createResponseTypes(interfaces: Array<Intf>) {
   `;
 }
 
+export const createSchema = (itf: Intf) => {
+  const reqJSONSchema = interfaceToJSONSchema(itf, 'request');
+  const resJSONSchema = interfaceToJSONSchema(itf, 'response');
+
+  return `{
+    request: ${JSON.stringify(reqJSONSchema)},
+    response: ${JSON.stringify(resJSONSchema)}
+  }`;
+};
+
 export async function createBaseRequestStr(interfaces: Array<Intf>, extr: ICreatorExtr) {
   const { rapUrl, resSelector } = extr;
   const modelStr = await createModel(interfaces, extr);
@@ -70,10 +80,16 @@ export async function createBaseRequestStr(interfaces: Array<Intf>, extr: ICreat
             return `
             ${creatInterfaceHelpStr(rapUrl, itf, extra)}
             '${modelName}': (req?: IModels['${modelName}']['Req'], extra?: commonLib.IExtra) => {
+              const schemas: {
+                request: commonLib.JSONSchema4,
+                response: commonLib.JSONSchema4
+              } = ${createSchema(itf)}
+
               return rapperFetch({
                 url: '${itf.url}',
                 method: '${itf.method.toUpperCase()}',
                 params: req, 
+                schemas,
                 extra
               }) as Promise<IResponseTypes['${modelName}']>;
             }`;
