@@ -32,6 +32,8 @@ export interface IRapper {
   type: RAPPER_TYPE;
   /** 必填，api仓库地址，从仓库的数据按钮可以获得 */
   apiUrl: string;
+  /** api 地址 */
+  apiOrigin?: string;
   /** 选填，rap平台前端地址，默认是 http://rap2.taobao.org */
   rapUrl?: string;
   /** 选填，生成出 rapper 的文件夹地址, 默认 ./src/rapper */
@@ -42,6 +44,8 @@ export interface IRapper {
   codeStyle?: {};
   /** 选填，类型变换 type Selector<T> = T */
   resSelector?: string;
+  /** 选填，resSelector 需要的外部的类型 */
+  typeRef?: string;
 }
 export default async function({
   type,
@@ -51,6 +55,8 @@ export default async function({
   urlMapper = t => t,
   codeStyle,
   resSelector = 'type ResSelector<T> = T',
+  typeRef,
+  apiOrigin,
 }: IRapper) {
   const rapperVersion: string = packageJson.version;
   const spinner = ora(chalk.grey('rapper: 开始检查版本'));
@@ -202,11 +208,15 @@ export default async function({
     requestStr = await Creator.createBaseRequestStr(interfaces, {
       rapUrl,
       resSelector,
+      typeRef,
+      apiOrigin,
     });
   } else {
     requestStr = await createBaseRequestStr(interfaces, {
       rapUrl,
       resSelector,
+      typeRef,
+      apiOrigin,
     });
   }
   requestStr = `
@@ -225,7 +235,7 @@ export default async function({
       content: format(
         `
           ${creatHeadHelpStr(rapUrl, projectId, rapperVersion)}
-          ${Creator.createDynamicStr(interfaces, { rapUrl, resSelector })}
+          ${Creator.createDynamicStr(interfaces, { rapUrl, resSelector, apiOrigin })}
         `,
         DEFAULT_OPTIONS,
       ),

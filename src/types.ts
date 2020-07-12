@@ -96,5 +96,7 @@ export interface IGeneratedCode {
 /** create 函数的参数 */
 export interface ICreatorExtr {
   rapUrl: string;
+  apiOrigin: string;
   resSelector: string;
+  typeRef?: string;
 }

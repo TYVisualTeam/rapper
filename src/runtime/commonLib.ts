@@ -38,7 +38,7 @@ export interface IExtra {
 }
 
 /** defaultFetch 参数 */
-interface IDefaultFetchParams {
+export interface IDefaultFetchParams {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH' | 'HEAD';
   params?: any;
@@ -73,7 +73,7 @@ interface IDefaultConfigObj {
 }
 
 type FetchConfigObj = Partial<IDefaultConfigObj>;
-type FetchConfigFunc = <T>(params: IUserFetchParams) => Promise<T>;
+type FetchConfigFunc = (params: IUserFetchParams) => Promise<any>;
 export type RequesterOption = FetchConfigObj | FetchConfigFunc;
 
 /**
@@ -237,7 +237,7 @@ export const getRapperRequest = (fetchConfig: RequesterOption) => {
     }
 
     rapperFetch = (requestParams: IUserFetchParams) => {
-      const { url, method, params, extra } = requestParams;
+      const { url, method, params, schemas, extra } = requestParams;
       fetchOption = fetchOption || {};
       let newExtra = typeof extra === 'object' ? extra : {};
       const newQuery =
@@ -247,6 +247,7 @@ export const getRapperRequest = (fetchConfig: RequesterOption) => {
         url: parseUrl(url, prefix),
         method,
         params,
+        schemas,
         extra: newExtra,
         fetchOption,
       });

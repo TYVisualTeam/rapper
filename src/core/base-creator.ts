@@ -57,10 +57,11 @@ export const createSchema = (itf: Intf) => {
 };
 
 export async function createBaseRequestStr(interfaces: Array<Intf>, extr: ICreatorExtr) {
-  const { rapUrl, resSelector } = extr;
+  const { rapUrl, resSelector, typeRef, apiOrigin } = extr;
   const modelStr = await createModel(interfaces, extr);
   return `
     import * as commonLib from '${packageName}/runtime/commonLib'
+    ${typeRef}
 
     ${modelStr}
 
@@ -107,11 +108,11 @@ export function createBaseIndexCode(): IGeneratedCode {
       import * as commonLib from '${packageName}/runtime/commonLib'
     `,
     body: `
-      const { defaultFetch } = commonLib
+      const { defaultFetch, Validator } = commonLib
       const fetch = createFetch({})
     `,
     export: `
-      export { fetch, createFetch, defaultFetch }
+      export { fetch, createFetch, defaultFetch, Validator }
       export type Models = IModels
     `,
   };
