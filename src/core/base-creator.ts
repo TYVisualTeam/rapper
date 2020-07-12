@@ -86,7 +86,7 @@ export async function createBaseRequestStr(interfaces: Array<Intf>, extr: ICreat
               } = ${createSchema(itf)}
 
               return rapperFetch({
-                url: '${itf.url}',
+                url: extra?.mock ? '${apiOrigin}/app/mock/data/${itf.id}' : '${itf.url}',
                 method: '${itf.method.toUpperCase()}',
                 params: req, 
                 schemas,
