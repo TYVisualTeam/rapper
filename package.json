@@ -9,7 +9,7 @@
     "normal": "npm run build && node ./dist/build/normal",
     "redux": "npm run build && node ./dist/build/redux",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-    "version": "yarn changelog && git add CHANGELOG.md"
+    "version": "yarn build && yarn changelog && git add CHANGELOG.md"
   },
   "bin": {
     "service-gen": "./dist/models.js"
