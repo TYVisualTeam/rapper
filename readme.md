@@ -18,7 +18,7 @@ tnpm install @ty-bct-modules/service-gen
 
 在 http://api.tongyu.tech:3000/ 注册用户后，新建仓库，编写接口，完成上述步骤后，在接口详情页面找到 `试试点这里帮你生成 TypeScript 代码`
 
-![](http://gitlab2.tongyu.tech/tongyu-fe/rapper/blob/master-inner/assets/2020-07-13-10-50-47.png)
+![](http://gitlab2.tongyu.tech/tongyu-fe/rapper/raw/master-inner/assets/2020-07-13-10-50-47.png)
 
 从脚本中获取参数，填写到 `package.json` 中到 rapper 字段
 
