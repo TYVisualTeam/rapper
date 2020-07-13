@@ -1,94 +1,52 @@
-[![MIT License][license-shield]][license-url]
+# @ty-bct-modules/service-gen
 
-<p align="center">
-  <a href="https://github.com/thx/rapper">
-    <img src="https://img.alicdn.com/tfs/TB1SlW9lQT2gK0jSZPcXXcKkpXa-1138-220.png" alt="Logo" width="250">
-  </a>
+基于 rapper 增加动态参数验证，mock 数据切换等功能
 
-  <h3 align="center">一个自带类型的请求库</h3>
+## 安装
 
-  <p align="center">
-    <a href="https://www.yuque.com/rap/rapper/readme">文档</a>
-  </p>
-</p>
-
-## Rapper 是什么？
-
-Rapper 是 TypeScript 的最佳拍档，它可以帮你生成具有类型定义的请求方案。
-
-- 无需自行书写请求代码，把 HTTP 接口当做函数调用
-- 请求参数/返回数据类型化，静态校验、自动补全快到飞起
-- 对 React/Redux 特别优化，提供全局数据方案，hooks 轻松使用
-
-## 来自阿里的 THX 团队
-
-十年前我们创立了 [Rap](https://github.com/thx/rap2-delos) 项目，如今已经有相当多的用户在 Rap 中管理接口文档和 Mock 数据。
-
-Rapper 在此基础上更进一步，利用这些已经录入的接口数据为你生成 TypeScript 类型定义以及配套的数据请求方案，让你在代码开发中省去重复的劳动。
-
-## 快速开始
-
-0. 如果你还没使用过 Rap，请先去我们的官方站点：http://rap2.taobao.org/ 注册一个账户并新建一个仓库，再向下进行。
-
-1. 进入仓库，点击配置「生成 TS 代码」
-
-<img src="https://img.alicdn.com/tfs/TB1hcail.Y1gK0jSZFMXXaWcVXa-1470-834.png" alt="install" width="700">
-
-2. 按照指引把 Rapper 安装到项目中
-
-3. 执行 `npm run rapper` 生成代码
-
-4. 引入生成的 fetch 函数，调用它就能发起请求并返回带有类型的响应数据
-
-```javascript
-// 从生成的代码中引入 fetch
-import { fetch } from './rapper';
-// 直接使用 fetch 调用请求函数，能获得请求/返回类型校验/提示
-(async function() {
-  // alt+点击可以查看接口信息
-  const res = await fetch['GET/example/rapper']({
-    foo: '123',
-  });
-  const nameList = res.taskList.map(e => e.name);
-})();
+```bash
+tyarn add @ty-bct-modules/service-gen
 ```
 
-### 友好的类型约束/提示
+or
 
-<img src="https://img.alicdn.com/tfs/TB1xV9Dl8r0gK0jSZFnXXbRRXXa-958-422.gif" alt="smart" width="1000">
-
-### 随时跳转到 Rap 查看接口文档
-
-<img src="https://img.alicdn.com/tfs/TB1ejyGl4D1gK0jSZFKXXcJrVXa-1008-463.gif" alt="jump" width="1000">
-
-## 在 React/Redux 场景下强大的数据管理方案
-
-如果你使用 React 和 Redux，在以上基础的请求函数之外，Rapper 还为你提供精心设计过的全局数据管理方案。
-
-以往发送一个请求要写繁杂的 interface/action/reducer/effect，现在这些都会为你准备好，你只需要使用即可：
-
-```javascript
-const [result, { id, isPending }] = useResponse['GET/duck/fetchColor'];
-
-useEffect(() => {
-  if (!result && !id) {
-    fetch['GET/duck/fetchColor'](params);
-  }
-}, [result, id, params]);
+```bash
+tnpm install @ty-bct-modules/service-gen
 ```
 
-## 文档
+## 使用
 
-想要在生产中深度使用 Rapper，你可能还需要自定义请求函数、对返回的数据做统一的类型转换
+在 http://api.tongyu.tech:3000/ 注册用户后，新建仓库，编写接口，完成上述步骤后，在接口详情页面找到 `试试点这里帮你生成 TypeScript 代码`
 
-具体请参考我们的文档：https://www.yuque.com/rap/rapper
+![](http://gitlab2.tongyu.tech/tongyu-fe/rapper/blob/master-inner/assets/2020-07-13-10-50-47.png)
 
-## 联系我们
+从脚本中获取参数，填写到 `package.json` 中到 rapper 字段
 
-- [Github Issue](https://github.com/thx/rapper/issues)
-- 钉钉群：11789704
+```json
+"rapper": "rapper --type normal --rapperPath \"src/rapper\" --apiUrl \"http://api.tongyu.tech:38080/repository/get?id=19&token=sb-35plMu0Iln0aqVz8CXwM53zA5hNXF\" --rapUrl \"http://api.tongyu.tech:3000\""
+```
 
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=flat-square
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=flat-square
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[product-screenshot]: images/screenshot.png
+package.json
+
+```json
+"rapper": {
+    "type": "normal",
+    "rapUrl": "http://api.tongyu.tech:3000",
+    "apiUrl": "http://api.tongyu.tech:38080/repository/get?id=19&token=sb-35plMu0Iln0aqVz8CXwM53zA5hNXF",
+    "rapperPath": "src/__apis__",
+    "typeRef": "import { ResponseData, ResultData, BCTAPIData } from \"@ty-bct-modules/request\";",
+    "resSelector": "type ResSelector<T extends BCTAPIData> = ResponseData<ResultData<T>>"
+}
+```
+
+添加 scripts 命令
+
+```json
+"service-gen": "service-gen"
+```
+
+执行构建，生成 `src/__apis__`，自定义请求请参考[这里](https://www.yuque.com/rap/rapper/user-fetch)
+
+## 其他
+
+[历史文档查看](http://gitlab2.tongyu.tech/tongyu-fe/rapper/blob/master-inner/readme.md)
